@@ -14,11 +14,11 @@ RUN apt-get update; \
 WORKDIR /apis
 
 RUN mkdir wars; \
-  git clone https://github.com/caposseleDigicat/DSPRODUCTCATALOG2.git
+  git clone https://github.com/CDECatapult/DSPRODUCTCATALOG2.git
 
 WORKDIR DSPRODUCTCATALOG2
 
-RUN git checkout Synchronicity; \
+RUN git checkout docker; \
     sed -i 's/jdbc\/sample/jdbc\/pcatv2/g' ./src/main/resources/META-INF/persistence.xml; \
     sed -i 's/<provider>org\.eclipse\.persistence\.jpa\.PersistenceProvider<\/provider>/ /g' ./src/main/resources/META-INF/persistence.xml; \
     sed -i 's/<property name="eclipselink\.ddl-generation" value="drop-and-create-tables"\/>/ /g' ./src/main/resources/META-INF/persistence.xml; \
