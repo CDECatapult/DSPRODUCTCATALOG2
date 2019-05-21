@@ -18,7 +18,7 @@ RUN mkdir wars; \
 
 WORKDIR DSPRODUCTCATALOG2
 
-RUN git checkout docker; \
+RUN git checkout 59b2c360bc264b3e893548df739b59348a09720d; \
     sed -i 's/jdbc\/sample/jdbc\/pcatv2/g' ./src/main/resources/META-INF/persistence.xml; \
     sed -i 's/<provider>org\.eclipse\.persistence\.jpa\.PersistenceProvider<\/provider>/ /g' ./src/main/resources/META-INF/persistence.xml; \
     sed -i 's/<property name="eclipselink\.ddl-generation" value="drop-and-create-tables"\/>/ /g' ./src/main/resources/META-INF/persistence.xml; \
