@@ -1,0 +1,69 @@
+version: 2
+jobs:
+  docker-build:
+    docker:
+      - image: docker:18.01.0-ce-git
+    steps:
+      - checkout
+
+      - setup_remote_docker
+
+      - run:
+          name: Login to docker
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+      - run:
+          name: Build the docker image
+          command: |
+            docker build -t catalog .
+
+      - run:
+          name: Tag the docker image
+          command: |
+            docker tag catalog digicatsynch/catalog:$CIRCLE_SHA1
+            docker tag catalog digicatsynch/catalog:ci-$CIRCLE_BUILD_NUM
+            docker tag catalog digicatsynch/catalog:${CIRCLE_BRANCH##feature/}
+
+      - run:
+          name: Push the docker image
+          command: |
+            docker push digicatsynch/catalog:$CIRCLE_SHA1
+            docker push digicatsynch/catalog:ci-$CIRCLE_BUILD_NUM
+            docker push digicatsynch/catalog:${CIRCLE_BRANCH##feature/}
+
+  release-version:
+    docker:
+      - image: docker:18.01.0-ce-git
+    steps:
+      - checkout
+
+      - setup_remote_docker
+
+      - run:
+          name: Login to docker
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+      - run:
+          name: Build the docker image
+          command: |
+            docker build -t digicatsynch/catalog:${CIRCLE_TAG##v} .
+
+      - run:
+          name: Push the docker image
+          command: |
+            docker push digicatsynch/catalog:${CIRCLE_TAG##v}
+workflows:
+  version: 2
+  logic-proxy:
+    jobs:
+      - docker-build
+  tagged-build:
+    jobs:
+      - release-version:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
