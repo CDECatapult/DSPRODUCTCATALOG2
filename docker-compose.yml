@@ -16,9 +16,6 @@ services:
       - MYSQL_ROOT_PASSWORD=my-secret-pw
       - MYSQL_HOST=mysql
 
-volumes:
-  mysql-catalog-data:
-
 networks:
   synchronicity:
     external: true
