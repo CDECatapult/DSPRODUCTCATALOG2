@@ -1,36 +1,20 @@
 version: "3"
 services:
-  mysql-catalog:
-    image: mysql:5.7
-    restart: always
-    ports:
-      - "3306"
-    volumes:
-      - mysql-catalog-data:/var/lib/mysql
-    networks:
-      synchronicity:
-    environment:
-      - MYSQL_ROOT_PASSWORD=toor
-      - MYSQL_DATABASE=DSPRODUCTCATALOG2
-
   catalog:
     build: .
     restart: always
     ports:
-      - "4848"
-      - "8080"
-    depends_on:
-      - mysql-catalog
+      - "5353:4848"
+      - "9005:8080"
     networks:
       synchronicity:
         aliases:
           - catalog.docker
+    volumes:
+      - ./apis-config:/etc/default/tmf/
     environment:
-      - MYSQL_ROOT_PASSWORD=toor
-      - MYSQL_HOST=mysql-catalog
-
-volumes:
-  mysql-catalog-data:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+      - MYSQL_HOST=mysql
 
 networks:
   synchronicity:
